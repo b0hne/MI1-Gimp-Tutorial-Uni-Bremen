@@ -1,0 +1,378 @@
+\documentclass{article}
+\author{Sebastian Benkel}
+\date{March 2017}
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[sc]{mathpazo}
+\usepackage[scaled=.8]{beramono}
+\usepackage{amsmath,amsfonts,amssymb,textcomp,calc,graphicx,booktabs,xcolor,subfig,tikz,parskip}
+\usepackage{geometry}
+\geometry{
+	margin=3cm
+}
+\definecolor{Red}{HTML}{F50012}
+\usepackage{hyperref}
+\hypersetup{
+  linktocpage=false,
+  colorlinks=true,
+  linkcolor={Red},
+  citecolor={Red},
+  filecolor={Red},
+  urlcolor={Red},
+  frenchlinks=false,
+  breaklinks=true,
+  pdffitwindow=true,
+  pdfencoding=auto
+}
+\def\UrlFont{\itshape}
+
+\newenvironment{fakefloat}[1]{
+  \begin{minipage}{.3\linewidth}
+    \pgfimage[interpolate=true,width=\linewidth]{#1}
+  \end{minipage}\hfill%
+  \begin{minipage}{.6\linewidth}
+    \setlength\parskip{1ex}
+}{
+  \end{minipage}\\[1em]
+}
+\def\reqpic#1{%
+  \begin{minipage}[t]{.3\linewidth}
+    \begin{center}
+      \pgfimage[interpolate=true,width=.6\linewidth]{./bilder/#1.jpg}\\
+      \texttt{#1}
+    \end{center}
+  \end{minipage}%
+}
+\def\button#1{\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (1.2em,1em);
+  \node[anchor=center] at (0.6em,0.5em) {\pgfimage[interpolate=true,height=1.2em]{./bilder/#1}};
+\end{tikzpicture}}
+\def\ra{\ensuremath{\rightarrow}}
+
+\begin{document}
+
+\begin{fakefloat}{bilder/all.png}
+  \huge\textbf{GIMP-Tutorial}\\[1em]
+  \Large Toke Lichtenberg\\
+  \normalsize (angepasst für WiSe 13/14 von Thomas Röfer)\\
+  \normalsize (\"uberarbeitet im WiSe 16/17 von Sebastian Benkel)\\
+  \\
+  \Large \today
+\end{fakefloat}
+
+\tableofcontents
+
+\clearpage
+
+\section{Vorbemerkungen}
+
+Die Abbildungen in diesem Tutorial stammen aus GIMP Version 2.8.20.
+
+Die Grundvoraussetzungen für das Tutorial sind die Dateien, die euch auf Stud.IP bereitgestellt wurden. Des Weiteren wird eine Version von GIMP benötigt, die aktuellste stabile Version f\"ur Windows und OS X kann  \hyperlink{https://www.gimp.org/downloads/}{hier} heruntergeladen werden. Linux-Nutzer sollten \emph{sudo apt-get install gimp} verwenden k\"onnen. Folgende Bilder werden benötigt:
+
+\vspace*{1em}
+\reqpic{earth}\hfill
+\reqpic{golfball}\hfill
+\reqpic{golfer}
+
+\vspace*{1em}
+
+\hfill\reqpic{starrynight}\hfill
+\reqpic{moon}\hfill
+\vspace*{1em}
+
+Wie bei allen anderen Computer-Programmen, gibt es auch bei GIMP mehrere Wege, um das gewünschte Ziel zu erreichen. Die hier vorgestellten Methoden müssen daher nicht zwangsläufig die besten sein. Die in diesem Dokument genannten Tastenkombinationen gelten für Windows und Linux. Mac-Nutzer müssen nur statt \textbf{Strg} \textbf{cmd} drücken und statt \textbf{Entf} \textbf{fn+Löschtaste}.
+
+\section{Überblick}
+
+Aus den bereitgestellten Bildern soll ein neues Bild erzeugt werden, das ähnlich zu dem auf der Titelseite ist. Dazu werden vier der fünf Bilder erst einmal getrennt vorbereitet. Der Golfspieler, der Golfball und die Erde werden ausgeschnitten, d.h. vom Hintergrund getrennt. Aus dem Mondbild wird ein rechteckiger Mittelbereich ausgeschnitten und der Astronaut wegretuschiert. Danach wird ein neues Bild angelegt und alle fünf Bilder als Ebenen darin eingefügt, skaliert und richtig positioniert, wobei der Golfspieler auch gespiegelt wird, damit seine Beleuchtungsrichtung der der restlichen Szene entspricht. Dann werden Schatten hinzugefügt und die Farben und Schärfe der Bildteile werden so angepasst, dass sie stimmig wirken. Zum Schluss wird noch ein Schriftzug auf dem Bild platziert.
+
+\section{GIMP starten}
+
+Nachdem ihr GIMP heruntergeladen und installiert habt, könnt ihr es das erste Mal starten. Ihr solltet drei Fenster vor euch sehen: das leere Hauptfenster mit dem Gimplogo und zwei Paletten. Je nach persönlichen Vorlieben könnt ihr mit \textbf{Fenster\ra Einzelfenster-Modus} auch in ein Layout schalten, in dem die Paletten an den Fensterrändern angedockt sind.
+
+Falls ihr Paletten geschlossen habt, könnt ihr sie mit \textbf{Fenster\ra Kürzlich geschlossene Docks} wieder öffnen.
+Der Werkzeugkasten lässt sich unter \textbf{Fenster \ra Werkzeugkasten} wieder anzeigen.
+\section{Bilder bearbeiten}
+
+\subsection{Ausschneiden}
+
+\begin{fakefloat}{bilder/circlepane.png}
+
+Bevor wir etwas ausschneiden können, müssen wir die gewünschten Bereiche markieren. Die Erde sowie der Golfball sind so gut geformt, dass wir beide mit dem normalen Kreis ausschneiden können. Wir wählen hierzu \button{circle.png}. Dies müssen wir mit folgender Einstellung machen, damit sich der Kreis aus der Mitte aufzieht. Für die Erde erhalten wir folgendes Bild:
+  
+\pgfimage[interpolate=true,width=\linewidth]{bilder/earthcircle.png}
+  
+\end{fakefloat}
+
+\subsection{Kopierte Ebenen einfügen}
+\label{copypaste}
+
+\begin{fakefloat}{bilder/newlayer.png}
+
+Nachdem ein Bereich markiert wurde, können wir ihn mittels \textbf{Strg+C} kopieren. Der kopierte Bereich kann nun mit \textbf{Strg+V} in ein beliebiges Bild eingefügt werden. Dabei sehen wir in den Ebenen des Bildes, wie eine weitere Ebene hinzugekommen ist. Diese ist aber nicht von Dauer.
+
+Mit einem Klick auf \button{newlayersmall.png} wird das eingef\"ugte Bild dauerhaft in einen neuen Layer hinzugefügt und ist nun als Ebene vorhanden. Wir können nun einzelne Layer unsichtbar schalten. Hierzu klicken wir auf \button{eye.png} direkt neben dem gew\"unschten Layer. In unserem Fall ist es nun jedoch besser die Hintergrund-Ebene ganz zu löschen, da wir sie ohnehin nicht mehr benötigen. Dies erreichen wir, indem wir sie selektieren und dann auf \button{deletelayer.png} klicken, welches sich unten rechts bei den Ebenen befindet.
+  
+\textbf{Alternativ} dazu können wir im Menü auch zuvor kopierte Inhalte mit \textbf{Bearbeiten\ra Einfügen als\dots\ra Neue Ebene} direkt als neue Ebene einfügen.
+
+\end{fakefloat}
+
+\subsubsection{Kanten ausblenden}
+\label{kantenausblenden}
+
+\begin{fakefloat}{bilder/ausblenden.png}
+
+Um die Kanten weicher zu machen, wählen wir in der neuen Ebene mittels \button{magicselect2.png} aus dem  \textbf{Wekzeugkasten} den gesamten unsichtbaren Bereich aus. Danach wählen wir \textbf{Auswahl\ra Ausblenden...} und drücken danach \textbf{Entf}. Dies führt dazu, dass die Kanten des Bildes abgeschwächt werden und sich so besser in die spätere Umgebung einfügen werden.
+
+\end{fakefloat}
+
+\subsubsection{Bilder speichern}
+
+Wir können bearbeitete Bilder in einer xcf-Datei speichern. Alternativ kann mit \textbf{Datei\ra Exportieren} auch in gebräuchlichen Grafikformaten gespeichert werden, was für Zwischenergebnisse aber nicht sinnvoll ist und je nach Format auch mit Qualitäts- und/oder Informationsverlust (Ebenen, Transparenz) einhergeht. 
+
+\subsection{Komplexe Formen ausschneiden}
+
+\begin{fakefloat}{bilder/golfermarked.png}
+
+Die Form des Golfspielers ist deutlich komplizierter als die der Erde bzw. des Golfballs. Wir haben hier die Möglichkeit, mit dem Lasso (\button{freeselect.png}) einen Bereich zu markieren, welchen wir ausschneiden möchten. Ebenfalls können wir hierfür die »magische Schere« verwenden (\button{scissor.png}).
+\\
+(Der Unterschied der beiden Tools besteht darin, dass das Lasso gerade Linien zwischen den Punkten schneidet und die Schere versucht Farbverl\"aufe aus zuschneiden.)
+\\
+Um das ausschneiden etwas \"uberschaubarer zu gestalten kann der Golfer mit dem Lasso erst einmal grob ausgeschnitten und in eine neue Ebene eingef\"ugt werden.
+Nun wird er mit einem der beiden Tools m\"oglichst genau umrandet. Zum Schluss beenden wir die Selektion, indem wir auch den Startpunkt klicken. Für das Scherenwerkzeug müssen wir zusätzlich einmal in den ausgewählten Bereich klicken oder die Eingabetaste drücken. Analog zur Erde und dem Golfball erzeugen wir dann aus dem ausgeschnittenen Bereich eine neue Ebene und löschen das Original.
+
+\end{fakefloat}
+
+\subsection{Bildausschnitt weiter verfeinern}
+
+\subsubsection{Störende Innenbereiche entfernen}
+
+\begin{fakefloat}{bilder/magicselectgolfer.png}
+
+Mittels  \button{magicselect.png} kann ein Bereich mit gleicher Farbe ausgewählt werden. (weitere farbige Bereiche können mit gedrückter \textbf{Shift}- (= \textit{Umschalt-}) Taste und erneutem klicken zur Auswahl hinzugefügt werden.)
+
+\end{fakefloat}
+
+\subsubsection{Bilder radieren}
+
+\begin{fakefloat}{bilder/size.png}
+Wenn es immer noch Bereiche gibt, die nicht ordentlich entfernt wurden, können
+diese mit \button{rubber.png} ausradiert werden. Hierbei ist es hilfreich die Größe des Radierers anzupassen.
+\end{fakefloat}
+\subsubsection{Farben entfernen}
+
+\begin{fakefloat}{bilder/deletecolor.png}
+  Eine bestimmte Farbe zu entfernen kann grade bei Haaren und Dingen, die sich
+  zwar vom Hintergrund abheben, aber schwierig zu schneiden sind, von Vorteil
+  sein. In unserem Fall haben wir Glück und unser Golfer trägt eine Cappy. Sollte dies nicht der Fall sein, können wir Haare leicht bearbeiten: Zuerst selektieren wir die entsprechende Ebene. Nun wählen wir das Farbselect Tool mit einem Klick auf \button{pipette.png} oder der \textbf{o} Taste. Wir  klicken nun auf die Farbe die wir aus dem Bild entfernen möchten.
+  Danach wählen wir das Pinselwerkzeug mit \textbf{p} oder mit einem klick
+  auf \button{pinsel.png} aus. Wir wählen, wie links gezeigt, die Einstellung
+  \textbf{Farbe entfernen} und zeichnen vorsichtig die Kopfform nach. Die Haare
+  werden, wenn wir alles richtig gemacht haben, ausgelassen und sind mit nichts umgeben.
+  
+  \pgfimage[interpolate=true,width=\linewidth]{bilder/hair.png}
+\end{fakefloat}
+
+Zum Schluss werden auch die Kanten des Golfers, wie in Abschnitt~\ref{kantenausblenden} beschrieben, abgeschwächt.
+
+\subsection{Retuschieren durch Klonen}
+
+\begin{fakefloat}{bilder/cutmoon.png}
+
+Um die Mondoberfläche nun für unsere Zwecke vorzubereiten schneiden wir zuerst ein Stück aus der Mitte des Bildes aus.
+\\
+Nun kann der Schwarze Himmel mit \button{magicselect.png} ausgewählt und entfernt(del-Button) werden.
+die obere Hälfte des Astronauten und übrig gebliebene Pixel können nun mit dem \button{rectangle.png}
+ausgewählt und entfernt werden.
+\end{fakefloat}
+
+
+Um den Rumpf des Astronauten zu entfernen, nutzen wir das Werkzeug \button{clone.png} zum Klonen. Dazu müssen wir erst im Bild mit gedrückter \textbf{Strg}-Taste einen Punkt markieren, der als Vorlage für den Startpunkt des Wegretuschierens dienen soll. Das eigentliche Klonen läuft dann so ab, dass sich dieser Vorlagenpunkt gemeinsam mit unserem Malwerkzeug über das Bild bewegt und der Bildinhalt aus der Vorlage zum Malen verwendet wird. Dadurch "`verschwindet"' der übermalte Bereich, wenn der geklonte Bereich zum übermalten Bereich passt. Die Größe des Klonbereichs ist einstellbar. Man sollte den Vorlagepunkt so wählen, dass niemals bereits geklonte Bildinhalte wieder als Vorlage verwendet werden, weil diese durch mehrfaches Kopieren unschärfer werden und auffällige Wiederholungen entstehen können.
+\\
+Um später die Ausleuchtung des Bildes zu vereinfachen empfiehlt es sich alle Stellen an denen ein Schatten geworfen wird zu entfernen.
+
+\begin{fakefloat}{bilder/moonready.png}
+
+Das Ergebnis sollte in etwa so aussehen.
+\end{fakefloat}
+
+
+
+\section{Materialen zusammenbringen}
+
+\subsection{Neues Dokument erzeugen}
+
+\begin{fakefloat}{bilder/newdoc.png}
+
+Um unser Bild komponieren zu können, muss ein neues Dokument erstellt werden. Dies machen wir mittels \textbf{Datei\ra Neu}. Die Breite und Höhe legen die Auflösung unseres Bildes fest. Es bietet sich an, die Breite analog zur Breite der "`Mondlandschaft" einzustellen und genug Höhe für den Sternenhimmel einzuplanen.
+
+\end{fakefloat}
+
+\subsection{Bearbeitete Bilder importieren}
+
+\begin{fakefloat}{bilder/ebenen.png}
+
+Wir werden die oben aufgelisteten Bilder in unser aktuelles Dokument importieren. Am einfachsten ist es, die benötigten Dateien einfach in das neu erzeugte Dokument zu ziehen. Alternativ können die Bilder auch mittels \textbf{Datei\ra Als Ebenen öffnen\dots} hinzugefügt werden. Es können mehrere Bilder zugleich importiert werden, indem wir \textbf{Strg} gedrückt halten und die einzelnen Bilder markieren (s. unten). Alle Ebenen der importierten Bilder werden übernommen, die \textbf{Hintergrund}-Ebene kann entfernt werden. Das Ergebnis sollte ähnlich wie hier auf der linken Seite aussehen.
+  
+\pgfimage[interpolate=true,width=\linewidth]{bilder/selectlayers.png}
+
+\end{fakefloat}
+
+\section{Ebenen}
+
+\subsection{Ebenen auswählen}
+
+In der Palette \textbf{Ebenen} können wir die aktive Ebene auswählen. Die meisten Aktionen, die wir durchführen können, beziehen sich nur auf diese Ebene. Im Bild wird diese Ebene von einer gelben, gestrichelten Linie eingefasst. Ist diese Linie nicht zu sehen, ist die Ebene größer als der aktuell sichtbare Bereich. Der Sternenhimmel ist z.B. erheblich größer als unser Bild. In vielen Fällen ist es sinnvoll, z.B. beim Skalieren, den Zoom am unteren Fensterrand so einzustellen, dass die gesamte Umrandung der aktiven Ebene zu sehen ist. Ebenso sinnvoll ist es, Ebenen, die wir gerade nicht benötigen, durch einen Klick auf \button{eye.png} auszublenden, insbesondere, wenn sie, wie frisch nach dem Import, weder die richtige Größe noch die richtige Position im Bild haben.
+
+\subsection{Ebenen-Hierarchie}
+
+Ebenen sind wie auch in Photoshop in GIMP hierarchisch aufgebaut. Wir können diese
+Hierarchie einfach im Ebenen-Dock ändern, indem wir eine Ebene mit der Maus hoch
+oder runter ziehen. Dies ist zum Beispiel beim Hintergrund unseres Beispiels
+wichtig, da sich dieser, wie der Name schon sagt, hinter allen anderen Ebenen
+befinden soll. Der Sternenhimmel muss also, nachdem er skaliert worden ist, ganz unten bei den Ebenen eingeordnet werden.
+
+\subsection{Ebenen skalieren}
+
+\begin{fakefloat}{bilder/scalelayer.png}
+
+Um eine Ebene zu skalieren, müssen wir sie erst einmal selektieren und den Zoom so einstellen, dass die gesamte Ebene sichtbar ist. Danach können wir mit der \textbf{t}-Taste oder mit \button{scale.png} skalieren. Hierbei sollten wir die Skalierung beim gleichen Verhältnis belassen, da sonst das Bild verzerrt werden könnte. Dies sollte die Standarteinstellung des Tools sein. Ist dies nicht der Fall braucht man nur auf \button{chain.png} klicken. Das Symbol bedeutet auch in anderen Bereichen von GIMP, dass die Skalierung gleich bleibt. Wir können beim Skalieren entweder die Maus verwenden, indem wir auf das Bild klicken, gedrückt halten und ziehen, oder einfach einen Wert eingeben und bestätigen.
+
+\end{fakefloat}
+
+\subsection{Ebenen verschieben}
+
+\begin{fakefloat}{bilder/moveactiv.png}
+  Ebenen verschieben können wir sehr einfach mit mittels \button{move.png}. So ist
+  es möglich, zum Beispiel den Mond an die richtige Stelle zu schieben, sodass er
+  nicht so viel Platz im Bildbereich einnimmt. Hierbei wollen wir meistens die
+  \textbf{aktive Ebene} verschieben. Diese Option steht auf der linken Seite
+  ebenfalls zur Auswahl bereit.
+\end{fakefloat}
+
+\subsection{Ebenen spiegeln}
+
+\begin{fakefloat}{bilder/mirror.png}
+Nun haben wir ein kleines Problem. Die Mondoberfläche und der Golfer werden von links angestrahlt, die Erde und der Golfball von rechts.
+Da eine inverse Weltkugel sehr auffällig ist, drehen wir den Golfer und die Mondoberfläche um.
+\\
+Das Spiegeln einer Ebene ist mittels des \button{mirrorbutton.png} möglich.
+  Des Weiteren können wir, wie es links zu sehen ist, weiter unten auswählen, in
+  welche Richtung eine Ebene gespiegelt werden soll.
+\end{fakefloat}
+
+\subsection{Farben anpassen}
+
+\begin{fakefloat}{bilder/greymoon.png}
+
+Sollte der Mond zu dunkel wirken, kann seine Helligkeit angepasst werden. Dazu wird seine Ebene ausgewählt und dann mit \textbf{Farben\ra Farbton/Sättigung...} angepasst. 
+
+\end{fakefloat}
+
+\subsection{Stimmigkeit des Bildes verbessern}
+
+\begin{fakefloat}{bilder/manonthemoon.png}
+  Wenn wir alles so bearbeitet und zurecht geschoben haben, sieht unser Bild
+  schon relativ passabel aus. Allerdings fehlt es noch ein wenig an
+  Detailtreue. Wir möchten einen Schatten für unseren Golfer haben und eigentlich benötigt der Ball auch einen.
+\end{fakefloat}
+
+\subsubsection{Ebene verzerren} 
+
+\begin{fakefloat}{bilder/shiftlayer.png}
+
+Wir machen als erstes eine Kopie von unserem Golfer, indem wir die Ebene des Golfers selektieren und dann in dem Ebenen-Dock auf \button{copy.png} klicken. Nun sollte eine zweite Ebene in dem Reiter erscheinen. 
+ 
+Nun verwenden wir \button{shift.png}, um die Ebene dem Licht in der Umgebung anzupassen. Wir verdrehen die Ebene solange, bis sie ungefähr so wie auf der linken Seite aussieht und drücken die Eingabetaste.
+
+\end{fakefloat}
+
+\subsubsection{Ebenen selektieren}
+
+\begin{fakefloat}{bilder/shadowselect.png}
+  Als nächstes selektieren wir unseren zukünftigen Golferschatten, so wie wir es
+  weiter oben in Abschnitt \ref{kantenausblenden} schon mit dem Golfer selbst
+  gemacht haben, als wir die Kanten ausgeblendet haben. Wir invertieren die
+  Selektion mittels \textbf{Strg+I} oder indem wir auf
+  \textbf{Auswahl\ra Invertieren} klicken.
+\end{fakefloat}
+
+\subsubsection{Selektionen füllen}
+
+\begin{fakefloat}{bilder/shadow.png}
+
+Wir füllen die Selektion mit Schwarzer Farbe, indem wir auf \button{fill.png} klicken, in den Einstellungen \textbf{Ganze Auswahl füllen} auswählen und dann in die Selektion klicken. In manchen Fällen wird viel zu viel selektiert, weil die Selektion selbst unvollständig oder offen ist. In diesem Fall können wir die Selektion auch einfach mit dem Pinsel \button{pinsel.png} nachmalen.
+  
+\end{fakefloat}
+
+\subsubsection{Ebenen transparent schalten}
+
+\begin{fakefloat}{bilder/shadow-density.png}
+  Unser Schatten ist noch ein wenig zu stark. Nachdem wir ihn in der Hierarchie
+  weiter nach unten geschoben haben, ist er schonmal hinter dem Golfer, aber wir
+  wollen den Boden ein wenig durchscheinen lassen. Hierzu verändert wir, wie es
+  links zu sehen ist, die \textbf{Deckkraft} der Schatten-Ebene. Als Ergebnis
+  erhalten wir einen leicht transparenten Schatten.
+\pgfimage[interpolate=true,width=\linewidth]{bilder/shadowtransparent.png}
+\end{fakefloat}
+
+\subsubsection{Filter auf Ebenen anwenden}
+
+\begin{fakefloat}{bilder/gauss.png}
+  Die Kanten unseres Schattens sind noch ein wenig zu stark. Wir möchten einen
+  sanften Schatten. Hierzu deselektieren wir erst einmal unseren Schatten, indem
+  wir \textbf{UMSCHALT+Strg+A} drücken oder auf
+  \textbf{Auswahl\ra Nichts auswählen} klicken. Danach
+  klicken wir auf \textbf{Filter\ra Weichzeichner\ra Gaußscher
+  Weichzeichner}. Es öffnet sich der Dialog auf der linken Seite. Wenn wir die
+  Werte unten ändern, sehen wir, wie unser Schatten entweder weiter verschwimmt
+  oder klarer wird. Mit \textbf{OK} wenden wir den Filter an.
+  
+\end{fakefloat}
+
+Unsere Mondoberfläche ist eigentlich nur im Nahbereich scharf, während sie es in größerer Entfernung nicht ist. Dazu passt nicht, dass die Erde und die Sterne, die ja eigentlich noch weiter weg sein sollen, wiederum sehr scharf abgebildet werden. Auch dies sollten wir über einen Weichzeichner korrigieren.
+
+\section{Text hinzufügen}
+ 
+\begin{fakefloat}{bilder/textmoon.png}
+
+Zum Schluss fügen wir unserem noch einen Titel hinzu. Dazu klicken wir \button{text.png} und stellen dann Schriftart, Größe und Farbe ein. Danach klicken wir ins Bild und geben unseren Text ein. Mit der über dem Text erscheinenden Formatierungspalette können die Einstellungen auch noch auf Zeichenbasis verändert werden. Text erzeugt eine eigene Ebene und kann z.B. mit \button{move.png} verschoben werden. Zusätzlich bleibt er aber auch als Zeichenfolge editierbar, d.h. er kann später mit \button{text.png} noch verändert werden.
+
+\end{fakefloat}
+ 
+Das Ergebnis ist so ähnlich, wie auf dem Deckblatt, nur diesmal ohne Krater. Gute Arbeit :)
+
+\section{Weiterführende Links}
+
+\begin{itemize}
+  \item GIMP-Dokumentation: \url{http://docs.gimp.org/2.8/de/} (dt.)
+  \item offizielle Tutorials: \url{http://www.gimp.org/tutorials/} (en.)
+  \item \textbf{sehr} Hilfreich: Vordergrundauswahl-Tool,
+    \url{http://docs.gimp.org/2.8/de/gimp-tool-foreground-select.html}
+\end{itemize}
+
+\section{Quellennachweis}
+
+quellen:
+\\
+\\
+golfer.jpg - \url{https://www.pexels.com/photo/clouds-shade-golf-golfer-92858/} by Nathan Nedley is licensed under \hyperlink{https://creativecommons.org/publicdomain/zero/1.0/deed.de}{CC0}
+\\
+\\
+earth.jpg - \url{https://www.flickr.com/photos/gsfc/4392965590} by NASA is licensed under \hyperlink{https://creativecommons.org/licenses/by/2.0/}{CC BY 2.0}
+\\
+\\
+golf-ball.jpg \url{http://www.publicdomainpictures.net/view-image.php?image=36592&picture=&jazyk=DE} by Karen Arnold is licensed under \hyperlink{https://creativecommons.org/publicdomain/zero/1.0/deed.de}{CC0}
+\\
+\\
+starrynight.jpg - \url{http://www.freeimages.com/photo/starry-night-1164868} FreeImages.com/magicmarie  is licensed under \hyperlink{http://www.freeimages.com/license}{http://www.freeimages.com/ CONTENT LICENSE AGREEMENT}
+\\
+\\
+moon.jpg \url{https://commons.wikimedia.org/wiki/File:Mitchell_camera.jpg} under \hyperlink{https://creativecommons.org/publicdomain/zero/1.0/deed.de}{CC0} (NASA copyright policy states that "NASA material is not protected by copyright unless noted")
+\\
+\\
+hair.jpg - Bangin (\url{https://commons.wikimedia.org/wiki/File:Hair_gel.jpg}), „Hair gel“, erased some of the background by Sebastian Benkel, \hyperlink{https://creativecommons.org/licenses/by/3.0/deed.de}{CC BY 3.0}
+
+\end{document}
